@@ -30,7 +30,9 @@ public class ClassRequest extends Request {
         if (runner == null) {
             synchronized (runnerLock) {
                 if (runner == null) {
-                    runner = new AllDefaultPossibilitiesBuilder(canUseSuiteMethod).safeRunnerForClass(fTestClass);
+                    runner = new AllDefaultPossibilitiesBuilder(
+                            canUseSuiteMethod ? null : fTestClass)
+                                    .safeRunnerForClass(fTestClass);
                 }
             }
         }

@@ -7,10 +7,14 @@ import org.junit.runner.Runner;
 import org.junit.runners.model.RunnerBuilder;
 
 public class AllDefaultPossibilitiesBuilder extends RunnerBuilder {
-    private final boolean canUseSuiteMethod;
+    private final Class<?> dontUseSuiteMethod;
 
-    public AllDefaultPossibilitiesBuilder(boolean canUseSuiteMethod) {
-        this.canUseSuiteMethod = canUseSuiteMethod;
+    public AllDefaultPossibilitiesBuilder() {
+        this(null);
+    }
+
+    public AllDefaultPossibilitiesBuilder(Class<?> dontUseSuiteMethod) {
+        this.dontUseSuiteMethod = dontUseSuiteMethod;
     }
 
     @Override
@@ -18,7 +22,7 @@ public class AllDefaultPossibilitiesBuilder extends RunnerBuilder {
         List<RunnerBuilder> builders = Arrays.asList(
                 ignoredBuilder(),
                 annotatedBuilder(),
-                suiteMethodBuilder(),
+                suiteMethodBuilder(testClass),
                 junit3Builder(),
                 junit4Builder());
 
@@ -47,8 +51,8 @@ public class AllDefaultPossibilitiesBuilder extends RunnerBuilder {
         return new IgnoredBuilder();
     }
 
-    protected RunnerBuilder suiteMethodBuilder() {
-        if (canUseSuiteMethod) {
+    protected RunnerBuilder suiteMethodBuilder(Class<?> testClass) {
+        if (testClass != dontUseSuiteMethod) {
             return new SuiteMethodBuilder();
         }
         return new NullBuilder();
